@@ -1,0 +1,35 @@
+{
+  "selected_model": "gradient_boosting",
+  "seasonal_lag": 168,
+  "validation": {
+    "gradient_boosting": {
+      "mae": 34.71235126315834,
+      "rmse": 52.881432675773894,
+      "smape": 0.1876114846781944
+    },
+    "seasonal_naive": {
+      "mae": 57.37141750580945,
+      "rmse": 97.37787441727374,
+      "smape": 0.2659580775351871
+    }
+  },
+  "test_gradient_boosting": {
+    "mae": 32.186784929297204,
+    "rmse": 51.44626140395446,
+    "smape": 0.2213616138442869
+  },
+  "test_seasonal_naive": {
+    "mae": 85.74477149496515,
+    "rmse": 149.4050258026452,
+    "smape": 0.456013508846153
+  },
+  "test_selected": {
+    "mae": 32.186784929297204,
+    "rmse": 51.44626140395446,
+    "smape": 0.2213616138442869
+  },
+  "train_rows": 12047,
+  "validation_rows": 2582,
+  "test_rows": 2582,
+  "random_seed": 42
+}

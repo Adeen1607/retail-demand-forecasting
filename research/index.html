@@ -1,0 +1,65 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Demand Forecasting with Historical Features</title><link rel="stylesheet" href="style.css"></head><body><header><div><p class="meta">Mohammed Adeen Shaik · Research and coursework</p><h1>Demand Forecasting with Historical Features</h1><nav><a href="index.html">Overview</a><a href="report.html">Research report</a><a href="notebooks.html">Explained notebooks</a><a href="https://github.com/Adeen1607/retail-demand-forecasting">Source repository</a></nav></div></header><main><h2>The study</h2><p>Does gradient boosting improve demand error over a seasonal baseline in chronological evaluation?</p><p>UCI Bike Sharing data, used as a demand-planning teaching example.</p><h2>What the evidence shows</h2><p>Fresh execution on 11 October 2026 using the committed pipeline and random seed 42. Validation selected <strong>gradient_boosting</strong>. On 2,582 later-period rows, selected-model MAE was <strong>32.19</strong> and seasonal-naive MAE was <strong>85.74</strong>, a <strong>62.5%</strong> reduction. This is rolling one-step evaluation using observed prior targets, not an advance multi-step forecast.</p>
+<table>
+<thead>
+<tr>
+<th>Measure</th>
+<th style="text-align: right;">Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>selected model</td>
+<td style="text-align: right;">gradient_boosting</td>
+</tr>
+<tr>
+<td>seasonal lag</td>
+<td style="text-align: right;">168</td>
+</tr>
+<tr>
+<td>train rows</td>
+<td style="text-align: right;">12047</td>
+</tr>
+<tr>
+<td>validation rows</td>
+<td style="text-align: right;">2582</td>
+</tr>
+<tr>
+<td>test rows</td>
+<td style="text-align: right;">2582</td>
+</tr>
+<tr>
+<td>random seed</td>
+<td style="text-align: right;">42</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Test model</th>
+<th style="text-align: right;">MAE</th>
+<th style="text-align: right;">RMSE</th>
+<th style="text-align: right;">sMAPE</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>test_gradient_boosting</td>
+<td style="text-align: right;">32.19</td>
+<td style="text-align: right;">51.45</td>
+<td style="text-align: right;">0.221</td>
+</tr>
+<tr>
+<td>test_seasonal_naive</td>
+<td style="text-align: right;">85.74</td>
+<td style="text-align: right;">149.41</td>
+<td style="text-align: right;">0.456</td>
+</tr>
+<tr>
+<td>test_selected</td>
+<td style="text-align: right;">32.19</td>
+<td style="text-align: right;">51.45</td>
+<td style="text-align: right;">0.221</td>
+</tr>
+</tbody>
+</table><h2>Read the work</h2><p><a href="report.html">Research report and final result figures</a> · <a href="notebooks.html">Explained notebooks</a></p><h2>Interpretation</h2><p>This is rolling one-step evaluation with observed history, not a multi-step forecast from a single origin. Weather variables may be observed rather than known in advance. Row-based lags can differ from calendar-hour lags when timestamps are missing. Bike rentals are not actual retail SKU sales.</p><footer>Evidence dates and limitations are documented in the report. Static pages display saved outputs; they do not execute Python, R, Streamlit or API calls.</footer></main></body></html>

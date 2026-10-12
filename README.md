@@ -41,3 +41,42 @@ python src/train.py
 ## Responsible use
 
 This historical dataset is used to demonstrate forecasting design. A retail deployment would require current product-location demand, promotions, stock availability, price, holidays, product substitutions, and explicit treatment of censored demand caused by stock-outs.
+
+
+## Rebuild the reading edition
+
+```bash
+python -m pip install -r requirements-research.txt
+python scripts/build_research_site.py
+```
+
+This renders saved notebook outputs without rerunning model training or external APIs. To refresh findings, run the analysis commands above first, update `reports/research-findings.md`, and rebuild.
+
+<!-- research-edition:start -->
+## Research edition
+
+[Research report and final visual results](research/report.md) · [Browser-ready notebook catalogue](research/notebooks.html)
+
+Fresh execution on 11 October 2026 using the committed pipeline and random seed 42. Validation selected **gradient_boosting**. On 2,582 later-period rows, selected-model MAE was **32.19** and seasonal-naive MAE was **85.74**, a **62.5%** reduction. This is rolling one-step evaluation using observed prior targets, not an advance multi-step forecast.
+
+| Measure | Value |
+|---|---:|
+| selected model | gradient_boosting |
+| seasonal lag | 168 |
+| train rows | 12047 |
+| validation rows | 2582 |
+| test rows | 2582 |
+| random seed | 42 |
+
+
+| Test model | MAE | RMSE | sMAPE |
+|---|---:|---:|---:|
+| test_gradient_boosting | 32.19 | 51.45 | 0.221 |
+| test_seasonal_naive | 85.74 | 149.41 | 0.456 |
+| test_selected | 32.19 | 51.45 | 0.221 |
+
+
+
+The `research/` folder contains a professional static reading edition. The Pages workflow deploys it after GitHub Pages is enabled with **GitHub Actions** as the publishing source. Intended URL: `https://adeen1607.github.io/retail-demand-forecasting/`. Deployment status must be checked in Actions before treating that address as live.
+
+<!-- research-edition:end -->

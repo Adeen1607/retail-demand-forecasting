@@ -1,0 +1,15 @@
+{
+  "repository": "Adeen1607/retail-demand-forecasting",
+  "review_date": "2026-10-11",
+  "evidence_note": "Fresh execution on 11 October 2026 using the committed pipeline and random seed 42. Validation selected **gradient_boosting**. On 2,582 later-period rows, selected-model MAE was **32.19** and seasonal-naive MAE was **85.74**, a **62.5%** reduction. This is rolling one-step evaluation using observed prior targets, not an advance multi-step forecast.\n\n| Measure | Value |\n|---|---:|\n| selected model | gradient_boosting |\n| seasonal lag | 168 |\n| train rows | 12047 |\n| validation rows | 2582 |\n| test rows | 2582 |\n| random seed | 42 |\n\n\n| Test model | MAE | RMSE | sMAPE |\n|---|---:|---:|---:|\n| test_gradient_boosting | 32.19 | 51.45 | 0.221 |\n| test_seasonal_naive | 85.74 | 149.41 | 0.456 |\n| test_selected | 32.19 | 51.45 | 0.221 |\n\n",
+  "inputs": [
+    {
+      "path": "notebooks/key_visuals.ipynb",
+      "sha256": "5090635228767bdb7aeee4d377fdd0b79ba5fd7933ea996a80925fe580e569d6"
+    },
+    {
+      "path": "reports/results/metrics.json",
+      "sha256": "a235ca0a4516c6d14c8af95da574f511c36bc29d72ddc08d6651f2e752b09595"
+    }
+  ]
+}
