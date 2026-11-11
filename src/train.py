@@ -47,7 +47,9 @@ def load_data() -> tuple[pd.DataFrame, int]:
         hourly = "hr" in data.columns
         data["timestamp"] = pd.RangeIndex(len(data))
 
-    data = data.sort_values("timestamp").drop_duplicates("timestamp").reset_index(drop=True)
+    if data["timestamp"].duplicated().any():
+        raise ValueError("Source contains duplicate timestamps")
+    data = data.sort_values("timestamp").reset_index(drop=True)
     seasonal_lag = 168 if hourly else 7
     return data, seasonal_lag
 

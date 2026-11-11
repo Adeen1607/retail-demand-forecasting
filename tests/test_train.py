@@ -64,3 +64,37 @@ def test_load_data_rejects_invalid_calendar_inputs(monkeypatch, dates, hours, er
     monkeypatch.setattr(training, "fetch_ucirepo", lambda id: dataset)
     with pytest.raises(ValueError, match=error):
         training.load_data()
+
+
+def test_load_data_does_not_silently_drop_duplicate_hours(monkeypatch):
+    from types import SimpleNamespace
+    from src import train as training
+
+    features = pd.DataFrame({
+        "dteday": ["2026-01-01", "2026-01-01"],
+        "hr": [1, 1],
+    })
+    dataset = SimpleNamespace(data=SimpleNamespace(
+        features=features, targets=pd.DataFrame({"cnt": [1, 2]})
+    ))
+    monkeypatch.setattr(training, "fetch_ucirepo", lambda id: dataset)
+    with pytest.raises(ValueError, match="duplicate timestamps"):
+        training.load_data()
+
+
+def test_load_data_keeps_unique_hours_in_chronological_order(monkeypatch):
+    from types import SimpleNamespace
+    from src import train as training
+
+    features = pd.DataFrame({
+        "dteday": ["2026-01-01", "2026-01-01"],
+        "hr": [1, 0],
+    })
+    dataset = SimpleNamespace(data=SimpleNamespace(
+        features=features, targets=pd.DataFrame({"cnt": [1, 2]})
+    ))
+    monkeypatch.setattr(training, "fetch_ucirepo", lambda id: dataset)
+    loaded, seasonal_lag = training.load_data()
+    assert seasonal_lag == 168
+    assert loaded["hr"].tolist() == [0, 1]
+    assert loaded[TARGET].tolist() == [2, 1]
