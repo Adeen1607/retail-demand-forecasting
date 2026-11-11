@@ -42,3 +42,59 @@ def test_metrics_are_zero_for_a_perfect_forecast() -> None:
     result = metrics(actual, predicted)
 
     assert result == {"mae": 0.0, "rmse": 0.0, "smape": 0.0}
+
+
+@pytest.mark.parametrize(
+    "dates,hours,error",
+    [
+        (["2026-01-01", "invalid"], [0, 1], "invalid dates"),
+        (["2026-01-01", "2026-01-01"], [0, 24], "invalid hour"),
+        (["2026-01-01", "2026-01-01"], [0, -1], "invalid hour"),
+        (["2026-01-01", "2026-01-01"], [0, 1.5], "invalid hour"),
+    ],
+)
+def test_load_data_rejects_invalid_calendar_inputs(monkeypatch, dates, hours, error):
+    from types import SimpleNamespace
+    from src import train as training
+
+    features = pd.DataFrame({"dteday": dates, "hr": hours})
+    dataset = SimpleNamespace(data=SimpleNamespace(
+        features=features, targets=pd.DataFrame({"cnt": [1, 2]})
+    ))
+    monkeypatch.setattr(training, "fetch_ucirepo", lambda id: dataset)
+    with pytest.raises(ValueError, match=error):
+        training.load_data()
+
+
+def test_load_data_does_not_silently_drop_duplicate_hours(monkeypatch):
+    from types import SimpleNamespace
+    from src import train as training
+
+    features = pd.DataFrame({
+        "dteday": ["2026-01-01", "2026-01-01"],
+        "hr": [1, 1],
+    })
+    dataset = SimpleNamespace(data=SimpleNamespace(
+        features=features, targets=pd.DataFrame({"cnt": [1, 2]})
+    ))
+    monkeypatch.setattr(training, "fetch_ucirepo", lambda id: dataset)
+    with pytest.raises(ValueError, match="duplicate timestamps"):
+        training.load_data()
+
+
+def test_load_data_keeps_unique_hours_in_chronological_order(monkeypatch):
+    from types import SimpleNamespace
+    from src import train as training
+
+    features = pd.DataFrame({
+        "dteday": ["2026-01-01", "2026-01-01"],
+        "hr": [1, 0],
+    })
+    dataset = SimpleNamespace(data=SimpleNamespace(
+        features=features, targets=pd.DataFrame({"cnt": [1, 2]})
+    ))
+    monkeypatch.setattr(training, "fetch_ucirepo", lambda id: dataset)
+    loaded, seasonal_lag = training.load_data()
+    assert seasonal_lag == 168
+    assert loaded["hr"].tolist() == [0, 1]
+    assert loaded[TARGET].tolist() == [2, 1]

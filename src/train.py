@@ -32,14 +32,24 @@ def load_data() -> tuple[pd.DataFrame, int]:
 
     if "dteday" in data.columns:
         date = pd.to_datetime(data["dteday"], errors="coerce")
+        if date.isna().any():
+            raise ValueError("Source contains missing or invalid dates")
         hourly = "hr" in data.columns
-        hour = pd.to_numeric(data["hr"], errors="coerce").fillna(0) if hourly else 0
+        hour = pd.to_numeric(data["hr"], errors="coerce") if hourly else 0
+        if hourly and (
+            hour.isna().any()
+            or not hour.between(0, 23).all()
+            or hour.mod(1).ne(0).any()
+        ):
+            raise ValueError("Source contains invalid hour values")
         data["timestamp"] = date + pd.to_timedelta(hour, unit="h")
     else:
         hourly = "hr" in data.columns
         data["timestamp"] = pd.RangeIndex(len(data))
 
-    data = data.sort_values("timestamp").drop_duplicates("timestamp").reset_index(drop=True)
+    if data["timestamp"].duplicated().any():
+        raise ValueError("Source contains duplicate timestamps")
+    data = data.sort_values("timestamp").reset_index(drop=True)
     seasonal_lag = 168 if hourly else 7
     return data, seasonal_lag
 
